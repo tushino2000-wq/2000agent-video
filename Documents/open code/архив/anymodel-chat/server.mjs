@@ -1,0 +1,307 @@
+import express from 'express';
+
+// Node 18+ имеет встроенный глобальный fetch — node-fetch не нужен.
+// Если запускаешь на Node < 18, раскомментируй строку ниже и установи node-fetch@2:
+// import fetch from 'node-fetch';
+
+const app = express();
+app.use(express.json());
+
+const API_KEY = process.env.API_KEY;
+const BASE_URL = process.env.BASE_URL;
+const MODEL_NAME = process.env.MODEL_NAME;
+const MY_PASSWORD = process.env.MY_PASSWORD;
+
+// Ключ polza.ai для генерации изображений (Nano Banana / Gemini 2.5 Flash Image)
+const POLZA_API_KEY = process.env.POLZA_API_KEY;
+const IMAGE_MODEL = process.env.IMAGE_MODEL || 'google/gemini-2.5-flash-image';
+
+let personalBase = "Имя: Олег. Москва. Solaris. Стол №5. Кот любит кролика.";
+let chatHistory = [];
+
+// Экранирование для безопасной вставки в HTML (защита от XSS / поломки вёрстки)
+function escapeHtml(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function getTimeDetailed(city) {
+    const cityName = city.toLowerCase();
+    let zone = "Europe/Moscow";
+    if (cityName.includes("камчат")) zone = "Asia/Kamchatka";
+    else if (cityName.includes("токио")) zone = "Asia/Tokyo";
+    else if (cityName.includes("минск")) zone = "Europe/Minsk";
+
+    try {
+        const now = new Date();
+        const timeStr = now.toLocaleString("ru-RU", {
+            timeZone: zone, hour: '2-digit', minute: '2-digit', hour12: false,
+            weekday: 'long', day: 'numeric', month: 'long'
+        });
+        const hour = parseInt(now.toLocaleString("en-GB", { timeZone: zone, hour: '2-digit', hour12: false }));
+        let period = (hour >= 5 && hour < 12) ? "УТРО" : (hour >= 12 && hour < 18) ? "ДЕНЬ" : (hour >= 18 && hour < 23) ? "ВЕЧЕР" : "НОЧЬ";
+        return `${timeStr} (сейчас там ${period})`;
+    } catch (e) { return "не определено"; }
+}
+
+// Генерация изображений через polza.ai (Nano Banana / Gemini 2.5 Flash Image)
+async function generateImage(prompt) {
+    if (!POLZA_API_KEY) {
+        return "Ошибка: не установлен POLZA_API_KEY для генерации изображений";
+    }
+    
+    try {
+        const response = await fetch('https://polza.ai/api/v1/media', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${POLZA_API_KEY}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                model: IMAGE_MODEL,
+                input: {
+                    prompt: prompt,
+                    aspect_ratio: '16:9',
+                    output_format: 'jpeg'
+                },
+                async: false
+            })
+        });
+        
+        const data = await response.json();
+        
+        // Синхронный режим: data.data.url
+        if (data.status === 'completed' && data.data && data.data.url) {
+            return `<img src="${data.data.url}" alt="Сгенерированное изображение">`;
+        } else if (data.error) {
+            console.error('Ошибка polza.ai:', data.error);
+            return `Ошибка генерации: ${data.error.message || 'неизвестная ошибка'}`;
+        } else {
+            console.error('Неожиданный ответ polza.ai:', JSON.stringify(data));
+            return 'Ошибка: изображение не получено';
+        }
+    } catch (e) {
+        console.error('Ошибка генерации изображения:', e);
+        return 'Ошибка связи с сервисом генерации изображений';
+    }
+}
+
+app.get('/', (req, res) => res.send("🔐 Вход по секретной ссылке."));
+
+app.post('/update_base', (req, res) => {
+    // ИСПРАВЛЕНО: раньше при неверном пароле ответ не отправлялся и запрос висел до таймаута
+    if (req.body.password === MY_PASSWORD) {
+        personalBase = req.body.newBase;
+        return res.json({ status: 'ok' });
+    }
+    res.status(403).json({ status: 'denied' });
+});
+
+app.get('/chat', (req, res) => {
+    const userPass = req.query.pass;
+    if (userPass !== MY_PASSWORD) return res.send("ОШИБКА ДОСТУПА");
+    res.send(`
+        <!DOCTYPE html>
+        <html>
+        <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Агент Олега 2026</title>
+        <style>
+            * { box-sizing: border-box; }
+            body { font-family: sans-serif; display: flex; height: 100vh; margin: 0; background: #2c3e50; color: white; }
+            #side { width: 260px; padding: 15px; background: #34495e; border-right: 1px solid #222; overflow-y:auto; }
+            #main { flex: 1; display: flex; flex-direction: column; background: #f0f2f5; color: black; }
+            #box { flex: 1; overflow-y: auto; padding: 20px; }
+            .m { margin-bottom: 15px; padding: 12px; border-radius: 12px; max-width: 85%; box-shadow: 0 1px 3px rgba(0,0,0,0.1); word-wrap: break-word; }
+            .u { background: #0084ff; color: white; margin-left: auto; text-align: right; }
+            .b { background: white; border: 1px solid #ddd; text-align: left; }
+            .b img { max-width: 100%; border-radius: 8px; margin-top: 10px; display: block; border: 1px solid #ccc; }
+            .in-area { padding: 15px; background: white; display: flex; gap: 10px; border-top: 1px solid #ccc; }
+            #inp { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size:16px; color: black; }
+            button { padding: 12px; background: #27ae60; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; min-width: 44px; }
+            #toggleSide { display: none; position: fixed; top: 10px; left: 10px; z-index: 1000; background: #34495e; padding: 10px 15px; border-radius: 8px; }
+            
+            /* Мобильная адаптация */
+            @media (max-width: 768px) {
+                body { flex-direction: column; }
+                #side { 
+                    position: fixed; 
+                    top: 0; 
+                    left: -100%; 
+                    width: 80%; 
+                    max-width: 300px; 
+                    height: 100vh; 
+                    z-index: 999; 
+                    transition: left 0.3s ease;
+                    border-right: none;
+                    box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+                }
+                #side.open { left: 0; }
+                #toggleSide { display: block; }
+                #box { padding: 60px 10px 10px 10px; }
+                .in-area { padding: 10px; gap: 5px; }
+                #inp { font-size: 16px; padding: 10px; }
+                button { padding: 10px; font-size: 14px; }
+                .m { max-width: 90%; font-size: 15px; }
+                #baseData { height: 150px !important; }
+            }
+            
+            @media (max-width: 480px) {
+                #box { padding: 60px 5px 5px 5px; }
+                .in-area { padding: 8px; gap: 4px; }
+                button { padding: 8px; min-width: 40px; }
+                .m { padding: 10px; font-size: 14px; }
+            }
+        </style></head>
+        <body>
+            <button id="toggleSide" onclick="toggleSidebar()">☰ База</button>
+            <div id="side">
+                <h3>🏠 Знания Агента</h3>
+                <textarea id="baseData" style="width:100%; height:200px; background:#1e272e; color:white; border:1px solid #555; padding:5px;">${escapeHtml(personalBase)}</textarea>
+                <button onclick="save()" style="width:100%; margin-top:10px; background:#2980b9;">💾 Сохранить</button>
+            </div>
+            <div id="main">
+                <div id="box"></div>
+                <div class="in-area">
+                    <button type="button" onclick="document.getElementById('fileInp').click()" style="background:#7f8c8d;">📎</button>
+                    <input type="file" id="fileInp" style="display:none" accept="image/*" onchange="attachPhoto(this)">
+                    <button type="button" id="micBtn" onclick="toggleMic()" style="background:#e67e22;">🎤</button>
+                    <input type="text" id="inp" placeholder="Напишите сообщение...">
+                    <button type="button" onclick="send()">➤</button>
+                </div>
+            </div>
+            <script>
+                let recognition;
+                let isListening = false;
+
+                if ('webkitSpeechRecognition' in window) {
+                    recognition = new webkitSpeechRecognition();
+                    recognition.lang = 'ru-RU';
+                    recognition.onresult = (e) => { document.getElementById('inp').value = e.results[0][0].transcript; stopMic(); };
+                    recognition.onend = stopMic;
+                }
+
+                function toggleSidebar() {
+                    const side = document.getElementById('side');
+                    side.classList.toggle('open');
+                }
+
+                // Закрытие сайдбара при клике вне его на мобильных
+                document.addEventListener('click', function(e) {
+                    const side = document.getElementById('side');
+                    const toggle = document.getElementById('toggleSide');
+                    if (window.innerWidth <= 768 && side.classList.contains('open') && 
+                        !side.contains(e.target) && !toggle.contains(e.target)) {
+                        side.classList.remove('open');
+                    }
+                });
+
+                function toggleMic() {
+                    if(!recognition) return;
+                    const btn = document.getElementById('micBtn');
+                    if (!isListening) { recognition.start(); btn.innerText = '🛑'; btn.style.background = '#c0392b'; isListening = true; }
+                    else stopMic();
+                }
+                function stopMic() { if(recognition) recognition.stop(); document.getElementById('micBtn').innerText = '🎤'; document.getElementById('micBtn').style.background = '#e67e22'; isListening = false; }
+
+                // Железный захват фото: просто пишем имя файла в строку ввода
+                function attachPhoto(input) {
+                    const file = input.files[0];
+                    if (file) {
+                        document.getElementById('inp').value = "Измени это фото (" + file.name + "): сделай в стиле арт";
+                    }
+                }
+
+                function save() {
+                    const txt = document.getElementById('baseData').value;
+                    fetch('/update_base', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ password: ${JSON.stringify(userPass)}, newBase: txt }) })
+                        .then(r => r.json())
+                        .then(d => {
+                            alert(d.status === 'ok' ? 'Сохранено!' : 'Ошибка доступа');
+                            if (window.innerWidth <= 768) document.getElementById('side').classList.remove('open');
+                        })
+                        .catch(() => alert('Ошибка сети'));
+                }
+
+                async function send() {
+                    const i = document.getElementById('inp'); const b = document.getElementById('box');
+                    const v = i.value; if(!v) return;
+                    b.innerHTML += '<div class="m u"><b>Вы:</b> ' + v + '</div>'; i.value = '';
+                    b.scrollTop = b.scrollHeight;
+
+                    b.innerHTML += '<div class="m b"><b>ИИ:</b> <span style="opacity:0.5">печатает...</span></div>';
+                    const loadingMsg = b.lastChild;
+                    b.scrollTop = b.scrollHeight;
+
+                    const r = await fetch('/ask', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ message: v, password: ${JSON.stringify(userPass)} }) });
+                    const d = await r.json();
+                    // Изображение приходит уже готовым тегом <img> из бэкенда (polza.ai / Nano Banana)
+                    loadingMsg.innerHTML = '<b>ИИ:</b> ' + (d.reply || "Ошибка");
+                    b.scrollTop = b.scrollHeight;
+                }
+
+                // Поддержка Enter
+                document.getElementById('inp').addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') send();
+                });
+            </script>
+        </body></html>
+    `);
+});
+
+app.post('/ask', async (req, res) => {
+    const { message, password } = req.body;
+    if (password !== MY_PASSWORD) return res.json({ reply: "Пароль не совпал" });
+    const moscowTime = getTimeDetailed("москва");
+    const history = chatHistory.slice(-6).map(m => `${m.role === 'user' ? 'Олег' : 'Агент'}: ${m.content}`).join('\n');
+
+    const systemPrompt = `Ты агент Олега. Сегодня 22.09.2026. База знаний: ${personalBase}. В Москве: ${moscowTime}. История: ${history}. 
+    1. Если просят изменить/нарисовать фото, используй команду: IMAGE_GEN:[описание_на_русском]
+    2. Время: TOOL:TIME(Город).`;
+
+    try {
+        const response = await fetch(`${BASE_URL}/chat/completions`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${API_KEY}` },
+            body: JSON.stringify({ model: MODEL_NAME, messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: message }] })
+        });
+        const data = await response.json();
+
+        // ИСПРАВЛЕНО: защита от отсутствия choices (ошибка API не маскируется под "Ошибка связи")
+        if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+            console.error('Некорректный ответ API:', JSON.stringify(data));
+            return res.json({ reply: "API вернул ошибку. Проверь ключ и настройки." });
+        }
+
+        let reply = data.choices[0].message.content;
+
+        // Обработка команды IMAGE_GEN
+        if (reply.includes('IMAGE_GEN:')) {
+            const match = reply.match(/IMAGE_GEN:\s*\[([^\]]+)\]/);
+            if (match) {
+                const imagePrompt = match[1];
+                const imageHtml = await generateImage(imagePrompt);
+                reply = reply.replace(/IMAGE_GEN:\s*\[[^\]]+\]/, imageHtml);
+            }
+        }
+
+        // Обработка команды TOOL:TIME
+        if (reply.includes('TOOL:TIME')) {
+            const m = reply.match(/TOOL:TIME\(([^)]+)\)/);
+            if (m) reply = "Время в г. " + m[1] + ": " + getTimeDetailed(m[1]);
+        }
+
+        chatHistory.push({ role: 'user', content: message }, { role: 'assistant', content: reply });
+        if (chatHistory.length > 20) chatHistory.shift();
+        res.json({ reply });
+    } catch (e) {
+        console.error('Ошибка связи:', e);
+        res.json({ reply: "Ошибка связи" });
+    }
+});
+
+app.listen(process.env.PORT || 3000, () => {
+    console.log(`Сервер запущен на порту ${process.env.PORT || 3000}`);
+});

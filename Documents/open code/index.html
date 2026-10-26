@@ -1,0 +1,291 @@
+<!DOCTYPE html><html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Видеогенератор AI</title>
+    <link rel="stylesheet" href="styles.css?v=3">
+</head>
+<body class="dark-theme">
+    <!-- Модальное окно авторизации -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <h2>🔒 Вход в приложение</h2>
+            <p>Введите пароль для доступа</p>
+            <input type="password" id="passwordInput" placeholder="Пароль" autocomplete="current-password">
+            <button id="loginBtn" class="btn btn-primary">Войти</button>
+            <div id="authError" class="error-message"></div>
+        </div>
+    </div>
+
+
+    <!-- Главное приложение -->
+    <div id="app" class="app hidden">
+        <!-- Мобильная шапка -->
+        <header class="mobile-header">
+            <button id="burgerMenu" class="burger-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <h1>AI Видео</h1>
+            <button id="mobileThemeToggle" class="theme-toggle">🌙</button>
+        </header>
+
+
+        <div class="container">
+            <!-- Левая колонка (Меню) -->
+            <aside id="leftColumn" class="column left-column">
+                <div class="column-header">
+                    <h2>Меню</h2>
+                    <button class="collapse-btn" data-column="left">←</button>
+                </div>
+                <nav class="menu">
+                    <button class="menu-item active" data-section="create">
+                        <span class="icon">🎬</span>
+                        <span>Создать видео</span>
+                    </button>
+                    <button class="menu-item" data-section="history">
+                        <span class="icon">📋</span>
+                        <span>История</span>
+                    </button>
+                    <button class="menu-item" data-section="settings">
+                        <span class="icon">⚙️</span>
+                        <span>Настройки API</span>
+                    </button>
+                </nav>
+                <div class="sidebar-history content-block">
+                    <h3>История</h3>
+                    <div id="historySidebar" class="mini-history">
+                        <p class="empty-state">История пока пуста</p>
+                    </div>
+                </div>
+                <div class="menu-footer">
+                    <button id="logoutBtn" class="menu-item">
+                        <span class="icon">⚙️</span>
+                        <span>Выход</span>
+                    </button>
+                </div>
+            </aside>
+
+
+            <!-- Центральная колонка (Рабочая область) -->
+            <main id="centerColumn" class="column center-column">
+                <div class="column-header">
+                    <h2 id="sectionTitle">Создать видео</h2>
+                </div>
+
+
+                <!-- Секция: Создать видео -->
+                <section id="createSection" class="content-section active">
+                    <p class="section-description">Настройте сцену и параметры для генерации видео</p>
+                    
+                    <div class="form-group">
+                        <label for="promptInput">Описание сцены</label>
+                        <div class="textarea-wrapper">
+                            <textarea 
+                                id="promptInput" 
+                                placeholder="Опишите желаемую сцену для видео..."
+                                maxlength="4000"
+                            ></textarea>
+                            <div class="char-counter">
+                                <span id="charCount">0</span>/4000
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label id="referenceLabel">Референсное изображение (опционально)</label>
+                        <div class="reference-upload">
+                            <input type="file" id="referenceInput" accept="image/*" hidden>
+                            <button id="uploadReferenceBtn" class="btn btn-secondary">
+                                📎 Загрузить референс
+                            </button>
+                            <div id="referencePreview" class="reference-preview hidden">
+                                <img id="previewImage" src="" alt="Превью">
+                                <button id="removeReferenceBtn" class="remove-btn">✕</button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="modelSelect">Видеомодель</label>
+                        <select id="modelSelect" class="select-input">
+                            <!-- Опции заполняются автоматически из app.js -->
+                        </select>
+                        <p id="modelCapability" class="model-capability"></p>
+                        <p id="modelHint" class="model-hint"></p>
+                    </div>
+
+
+                    <div class="parameters-grid">
+                        <div class="form-group">
+                            <label for="durationSelect">Продолжительность</label>
+                            <select id="durationSelect" class="select-input">
+                                <!-- Заполняется автоматически -->
+                            </select>
+                        </div>
+
+
+                        <div class="form-group" id="aspectGroup">
+                            <label for="aspectSelect">Соотношение сторон</label>
+                            <select id="aspectSelect" class="select-input">
+                                <!-- Заполняется автоматически -->
+                            </select>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="resolutionSelect">Разрешение</label>
+                            <select id="resolutionSelect" class="select-input">
+                                <!-- Заполняется автоматически -->
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="cost-estimate">
+                        <h3>Ориентировочная стоимость</h3>
+                        <p id="costValue">Расчёт временно недоступен</p>
+                        <small id="costDetails" class="cost-details"></small>
+                    </div>
+
+
+                    <button id="generateBtn" class="btn btn-primary btn-large">
+                        🎥 Создать видео
+                    </button>
+                </section>
+
+
+                <!-- Секция: История -->
+                <section id="historySection" class="content-section">
+                    <div id="currentTask" class="current-task hidden">
+                        <h3>Текущее задание</h3>
+                        <div class="task-card">
+                            <div class="task-info">
+                                <p><strong>Модель:</strong> <span id="taskModel">-</span></p>
+                                <p><strong>Статус:</strong> <span id="taskStatus" class="status-badge">В очереди</span></p>
+                                <p><strong>Время:</strong> <span id="taskTimer">00:00</span></p>
+                            </div>
+                            <div class="task-progress">
+                                <div class="progress-bar">
+                                    <div id="progressFill" class="progress-fill"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="historyList" class="history-list">
+                        <p class="empty-state">История пока пуста</p>
+                    </div>
+                </section>
+
+
+                <!-- Секция: Настройки API -->
+                <section id="settingsSection" class="content-section">
+                    <div class="settings-group">
+                        <h3>Провайдер API</h3>
+                        <div class="provider-selector">
+                            <button class="provider-btn active" data-provider="kie">KIE</button>
+                            <button class="provider-btn" data-provider="custom" disabled>Другой (скоро)</button>
+                        </div>
+                    </div>
+
+
+                    <div class="settings-group">
+                        <label for="apiKeyInput">API ключ</label>
+                        <div class="api-key-input-group">
+                            <input type="password" id="apiKeyInput" placeholder="Введите ваш API ключ" autocomplete="off">
+                            <button id="toggleApiKeyBtn" class="btn-icon">👁️</button>
+                        </div>
+                        <button id="saveApiKeyBtn" class="btn btn-primary">Проверить и сохранить</button>
+                        <div id="apiKeyStatus" class="status-message"></div>
+                    </div>
+
+
+                    <div class="settings-group">
+                        <label>
+                            <input type="checkbox" id="soundToggle" checked>
+                            Звуковые уведомления
+                        </label>
+                    </div>
+
+
+                    <div class="models-reference">
+                        <h3>Справка по моделям</h3>
+                        <div class="models-grid">
+                            <div class="model-card">
+                                <h4>Seedance</h4>
+                                <p><strong>Версии:</strong> 2, 2 Fast, 2 Mini, 2.5, 1.5 Pro</p>
+                                <p><strong>Длительность:</strong> до 30 сек</p>
+                                <p><strong>Особенности:</strong> Быстрая генерация, хорошее качество</p>
+                            </div>
+                            <div class="model-card">
+                                <h4>Kling 3.0</h4>
+                                <p><strong>Длительность:</strong> до 20 сек</p>
+                                <p><strong>Особенности:</strong> Высокое качество, реалистичность</p>
+                            </div>
+                            <div class="model-card">
+                                <h4>Wan 2.7</h4>
+                                <p><strong>Длительность:</strong> до 15 сек</p>
+                                <p><strong>Особенности:</strong> Креативные эффекты</p>
+                            </div>
+                            <div class="model-card">
+                                <h4>PixVerse V6</h4>
+                                <p><strong>Длительность:</strong> до 10 сек</p>
+                                <p><strong>Особенности:</strong> Стилизация, артистичность</p>
+                            </div>
+                            <div class="model-card">
+                                <h4>Grok 1.5</h4>
+                                <p><strong>Длительность:</strong> до 10 сек</p>
+                                <p><strong>Особенности:</strong> Экспериментальная модель</p>
+                            </div>
+                            <div class="model-card">
+                                <h4>MiniMax H3</h4>
+                                <p><strong>Длительность:</strong> до 15 сек</p>
+                                <p><strong>Особенности:</strong> Баланс скорости и качества</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+
+
+            <!-- Правая колонка (Контент) -->
+            <aside id="rightColumn" class="column right-column">
+                <div class="column-header">
+                    <button class="collapse-btn" data-column="right">→</button>
+                    <h2>Контент</h2>
+                    <button id="themeToggle" class="theme-toggle">🌙</button>
+                </div>
+                
+                <div class="right-content">
+                    <div class="content-block">
+                        <h3>Галерея</h3>
+                        <div id="gallery" class="gallery">
+                            <p class="empty-state">Созданных видео пока нет</p>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="resizer" id="resizer"></div>
+            </aside>
+        </div>
+    </div>
+
+
+    <!-- Toast уведомления -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Полноразмерный просмотр видео -->
+    <div id="videoViewer" class="video-viewer hidden" role="dialog" aria-modal="true" aria-label="Просмотр видео">
+        <button id="closeVideoViewer" class="video-viewer-close" type="button" aria-label="Закрыть">✕</button>
+        <video id="viewerVideo" controls playsinline></video>
+    </div>
+
+
+    <script src="app.js?v=9"></script>
+</body>
+</html>

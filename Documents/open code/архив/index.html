@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Бригада «Мурр» — демонтаж заборов и столбов. Шотландские вислоухие + бульдоги</title>
+<style>
+  :root{
+    --orange:#f59e0b;
+    --orange-dark:#d97706;
+    --dark:#1f2937;
+    --dark-2:#111827;
+    --light:#fef3c7;
+    --cream:#fffbeb;
+    --green:#166534;
+    --gray:#6b7280;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Segoe UI',Tahoma,Arial,sans-serif;
+    background:var(--cream);
+    color:var(--dark);
+    line-height:1.55;
+  }
+  .container{max-width:1100px;margin:0 auto;padding:0 20px;}
+
+  /* NAV */
+  nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(255,251,235,.92);backdrop-filter:blur(6px);
+    border-bottom:3px dashed var(--orange);
+  }
+  nav .container{display:flex;align-items:center;gap:20px;padding-top:10px;padding-bottom:10px;flex-wrap:wrap;}
+  .logo{font-weight:900;font-size:1.25rem;color:var(--orange-dark);display:flex;align-items:center;gap:8px;}
+  .logo .paw{font-size:1.4rem;}
+  nav ul{display:flex;gap:18px;list-style:none;margin-left:auto;flex-wrap:wrap;}
+  nav a{color:var(--dark);text-decoration:none;font-weight:600;font-size:.95rem;}
+  nav a:hover{color:var(--orange-dark);text-decoration:underline wavy var(--orange);}
+  .nav-btn{
+    background:var(--orange);color:#fff;padding:8px 16px;border-radius:999px;
+    font-weight:800;text-decoration:none;box-shadow:0 3px 0 var(--orange-dark);
+  }
+  .nav-btn:hover{transform:translateY(2px);box-shadow:0 1px 0 var(--orange-dark);text-decoration:none;}
+
+  /* HERO */
+  header.hero{
+    background:
+      radial-gradient(circle at 15% 20%, rgba(245,158,11,.18), transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(245,158,11,.15), transparent 40%),
+      var(--dark);
+    color:#fff;text-align:center;padding:70px 0 60px;
+    position:relative;overflow:hidden;
+  }
+  .hero .tagline{
+    display:inline-block;background:var(--orange);color:#fff;
+    padding:6px 18px;border-radius:999px;font-weight:800;font-size:.9rem;
+    letter-spacing:.5px;margin-bottom:18px;text-transform:uppercase;
+  }
+  .hero h1{
+    font-size:clamp(2rem,5vw,3.4rem);line-height:1.15;margin-bottom:16px;
+  }
+  .hero h1 .strike{text-decoration:line-through;opacity:.5;font-size:.8em;}
+  .hero .sub{font-size:1.15rem;color:#fcd34d;margin-bottom:10px;}
+  .hero .desc{max-width:720px;margin:0 auto 26px;color:#d1d5db;font-size:1.02rem;}
+  .hero-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
+  .btn{
+    display:inline-block;padding:14px 28px;border-radius:14px;
+    font-weight:800;text-decoration:none;font-size:1.05rem;
+    border:3px solid transparent;
+  }
+  .btn-primary{background:var(--orange);color:#fff;border-color:var(--orange);box-shadow:0 4px 0 var(--orange-dark);}
+  .btn-primary:hover{background:var(--orange-dark);}
+  .btn-ghost{background:transparent;color:#fff;border-color:#fcd34d;}
+  .btn-ghost:hover{background:#fcd34d;color:var(--dark);}
+  .hero .crew{display:flex;justify-content:center;gap:30px;margin-top:30px;flex-wrap:wrap;align-items:flex-end;}
+  .hero .member{text-align:center;width:180px;}
+  .hero .member svg{width:100%;filter:drop-shadow(0 10px 18px rgba(0,0,0,.5));}
+  .hero .member .name{font-weight:900;margin-top:8px;}
+  .hero .member .role{color:#fcd34d;font-size:.85rem;}
+
+  /* MARQUEE */
+  .marquee{
+    background:var(--orange);color:#fff;font-weight:800;overflow:hidden;
+    border-top:3px solid var(--orange-dark);border-bottom:3px solid var(--orange-dark);
+    padding:10px 0;white-space:nowrap;
+  }
+  .marquee span{display:inline-block;padding-right:40px;animation:scroll 22s linear infinite;font-size:1.05rem;letter-spacing:1px;}
+  @keyframes scroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+
+  section{padding:60px 0;}
+  .section-title{font-size:clamp(1.6rem,3.5vw,2.3rem);text-align:center;margin-bottom:8px;color:var(--dark-2);}
+  .section-sub{text-align:center;color:var(--gray);margin-bottom:36px;font-size:1.05rem;}
+  .bark{color:var(--orange-dark);}
+
+  /* WHY */
+  .why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;}
+  .why-card{
+    background:#fff;border:3px solid var(--light);border-radius:18px;padding:24px;
+    box-shadow:0 6px 18px rgba(0,0,0,.06);transition:.2s;
+  }
+  .why-card:hover{transform:translateY(-4px);border-color:var(--orange);}
+  .why-card .ico{font-size:2rem;}
+  .why-card h3{margin:10px 0 8px;font-size:1.1rem;}
+  .why-card p{color:var(--gray);font-size:.95rem;}
+
+  /* CREW */
+  .crew{background:var(--dark);color:#fff;}
+  .crew .section-title{color:#fff;}
+  .crew .section-sub{color:#9ca3af;}
+  .crew-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px;}
+  .crew-card{
+    background:var(--dark-2);border:3px solid #374151;border-radius:18px;padding:24px;
+    text-align:center;transition:.2s;
+  }
+  .crew-card:hover{border-color:var(--orange);transform:translateY(-4px);}
+  .crew-card img{width:150px;height:150px;margin:0 auto 12px;display:block;object-fit:cover;border-radius:50%;border:4px solid var(--orange);}
+  .story-wrap > img{width:100%;max-width:420px;aspect-ratio:1/1;object-fit:cover;border-radius:24px;border:5px solid var(--orange);box-shadow:0 10px 24px rgba(0,0,0,.25);display:block;justify-self:center;}
+  .photo img{width:100%;height:240px;object-fit:cover;display:block;background:#1f2937;}
+  .crew-card .role-tag{
+    display:inline-block;background:var(--orange);color:#fff;border-radius:999px;
+    padding:3px 12px;font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;
+  }
+  .crew-card h3{margin:10px 0 6px;}
+  .crew-card .spec{color:#fcd34d;font-size:.9rem;font-weight:700;}
+  .crew-card p{color:#9ca3af;font-size:.92rem;margin-top:8px;}
+  .crew-card .badge{
+    margin-top:10px;display:inline-block;background:#374151;color:#e5e7eb;
+    border-radius:8px;padding:4px 10px;font-size:.78rem;
+  }
+
+  /* FOREMAN STORY */
+  .story{background:var(--light);}
+  .story-wrap{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;}
+  .story-wrap svg{width:100%;max-width:420px;justify-self:center;}
+  .story-text h2{font-size:clamp(1.5rem,3vw,2.1rem);margin-bottom:14px;color:var(--dark-2);}
+  .story-text p{margin-bottom:14px;font-size:1.02rem;}
+  .story-text .quote{
+    background:#fff;border-left:6px solid var(--orange);border-radius:12px;
+    padding:16px 20px;font-style:italic;color:var(--gray);margin:16px 0;
+  }
+  .story-text .facts{list-style:none;margin-top:10px;}
+  .story-text .facts li{padding:8px 0;border-bottom:2px dashed #f59e0b;font-weight:600;}
+  .story-text .facts li::before{content:"🐾 ";}
+
+  /* PRICE */
+  .price-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;}
+  .price-card{
+    background:#fff;border:3px solid var(--light);border-radius:18px;padding:26px;text-align:center;
+    box-shadow:0 6px 18px rgba(0,0,0,.06);transition:.2s;position:relative;
+  }
+  .price-card.hit{border-color:var(--orange);}
+  .price-card.hit::before{
+    content:"ХИТ 🐟";position:absolute;top:-14px;left:50%;transform:translateX(-50%);
+    background:var(--orange);color:#fff;font-weight:800;font-size:.75rem;
+    padding:4px 14px;border-radius:999px;letter-spacing:1px;
+  }
+  .price-card .serv{font-weight:800;font-size:1.1rem;}
+  .price-card .price{font-size:1.9rem;font-weight:900;color:var(--orange-dark);margin:8px 0 4px;}
+  .price-card .unit{color:var(--gray);font-size:.85rem;}
+  .price-card .note{color:var(--gray);font-size:.85rem;margin-top:10px;}
+  .price-card .cat-feature{font-size:.8rem;color:#166534;font-weight:700;margin-top:8px;}
+  .price-note{text-align:center;color:var(--gray);margin-top:18px;font-size:.9rem;}
+
+  /* GALLERY */
+  .gallery{background:var(--dark);}
+  .gallery .section-title{color:#fff;}
+  .gallery .section-sub{color:#9ca3af;}
+  .gallery-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
+  .photo{
+    background:var(--dark-2);border:3px solid #374151;border-radius:16px;overflow:hidden;transition:.2s;
+  }
+  .photo:hover{border-color:var(--orange);transform:scale(1.02);}
+  .photo svg{width:100%;display:block;background:#1f2937;}
+  .photo figcaption{padding:12px 14px;font-size:.9rem;color:#d1d5db;text-align:center;}
+  .photo figcaption b{color:#fcd34d;}
+
+  /* CONTACT */
+  .contact{background:var(--light);}
+  .contact-wrap{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;}
+  .contact-card{background:#fff;border-radius:18px;padding:26px;border:3px solid var(--light);box-shadow:0 6px 18px rgba(0,0,0,.06);}
+  .contact-card h3{margin-bottom:12px;}
+  .contact-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:2px dashed var(--light);}
+  .contact-row:last-child{border-bottom:none;}
+  .contact-row .ic{font-size:1.4rem;}
+  .contact-row b{display:block;}
+  .contact-row span{color:var(--gray);font-size:.9rem;}
+  .map{
+    border-radius:18px;overflow:hidden;border:3px solid var(--light);
+    box-shadow:0 6px 18px rgba(0,0,0,.06);background:#fff;padding:20px;text-align:center;
+  }
+  .map .pin{font-size:3rem;}
+  .map .map-btn{
+    display:inline-block;margin-top:12px;background:var(--orange);color:#fff;
+    padding:10px 20px;border-radius:12px;font-weight:800;text-decoration:none;
+    box-shadow:0 3px 0 var(--orange-dark);
+  }
+  .map .map-btn:hover{background:var(--orange-dark);}
+
+  /* FORM */
+  .form-card{
+    background:#fff;border-radius:18px;padding:30px;border:3px solid var(--light);
+    box-shadow:0 6px 18px rgba(0,0,0,.06);margin-top:40px;
+  }
+  .form-card h3{text-align:center;margin-bottom:18px;}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .form-grid .full{grid-column:1/-1;}
+  input,textarea,select{
+    width:100%;padding:12px 14px;border:2px solid #e5e7eb;border-radius:12px;
+    font-family:inherit;font-size:1rem;background:var(--cream);
+  }
+  input:focus,textarea:focus,select:focus{outline:none;border-color:var(--orange);}
+  label{font-size:.85rem;font-weight:700;display:block;margin-bottom:6px;}
+  .submit{
+    grid-column:1/-1;background:var(--orange);color:#fff;border:none;cursor:pointer;
+    padding:14px;border-radius:12px;font-size:1.05rem;font-weight:900;
+    box-shadow:0 4px 0 var(--orange-dark);transition:.15s;
+  }
+  .submit:hover{background:var(--orange-dark);}
+  .form-note{text-align:center;font-size:.8rem;color:var(--gray);margin-top:10px;grid-column:1/-1;}
+  .ok-msg{
+    display:none;text-align:center;background:#dcfce7;border:2px solid #22c55e;
+    color:#166534;padding:14px;border-radius:12px;font-weight:700;margin-top:16px;
+  }
+
+  footer{
+    background:var(--dark-2);color:#9ca3af;text-align:center;padding:24px 0;
+    font-size:.85rem;
+  }
+  footer b{color:#fcd34d;}
+
+  @media(max-width:800px){
+    .story-wrap,.contact-wrap{grid-template-columns:1fr;}
+    .form-grid{grid-template-columns:1fr;}
+    nav ul{margin-left:0;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <a class="logo" href="#"><span class="paw">🐾</span> Бригада «Мурр»</a>
+    <ul>
+      <li><a href="#why">Почему мы</a></li>
+      <li><a href="#crew">Наша команда</a></li>
+      <li><a href="#story">Бригадир</a></li>
+      <li><a href="#price">Цены</a></li>
+      <li><a href="#work">Работы</a></li>
+      <li><a href="#contact">Контакты</a></li>
+    </ul>
+    <a class="nav-btn" href="#contact">Вызвать бригаду</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <div class="tagline">Усатые + Квадратные = ОБНОВЛЕНИЕ УЧАСТКА</div>
+    <h1>Демонтаж заборов и столбов<br><span class="strike">от них</span> — у нас!</h1>
+    <div class="sub">Бригада №1 СНТ «Ласточка» (Волоколамский район)</div>
+    <p class="desc">
+      Шотландские скотиш-страйты и бульдоги убирают старые заборы и столбы,
+      которые <b>сами же когда-то ободрали</b>. Иронично, правда? Работаем когтями, зубами и сердцем.
+      Не верите — приезжайте на базу в СНТ «Ласточка», посмотрите на бригадира.
+    </p>
+    <div class="hero-btns">
+      <a class="btn btn-primary" href="#contact">🐟 Оставить заявку</a>
+      <a class="btn btn-ghost" href="#work">Смотреть работы</a>
+    </div>
+
+    <div class="crew">
+      <div class="member">
+        <!-- Шотландский скотиш-страйт -->
+        <svg viewBox="0 0 200 200" aria-label="Шотландский скотиш-страйт кот-демонтажник">
+          <circle cx="100" cy="100" r="78" fill="#fbbf24"/>
+          <ellipse cx="70" cy="70" rx="30" ry="30" fill="#f59e0b"/>
+          <ellipse cx="130" cy="70" rx="30" ry="30" fill="#f59e0b"/>
+          <ellipse cx="70" cy="70" rx="20" ry="20" fill="#fcd34d"/>
+          <ellipse cx="130" cy="70" rx="20" ry="20" fill="#fcd34d"/>
+          <ellipse cx="70" cy="70" rx="10" ry="10" fill="#b45309"/>
+          <ellipse cx="130" cy="70" rx="10" ry="10" fill="#b45309"/>
+          <circle cx="100" cy="100" r="60" fill="#f59e0b"/>
+          <ellipse cx="82" cy="92" rx="8" ry="12" fill="#111827"/>
+          <ellipse cx="118" cy="92" rx="8" ry="12" fill="#111827"/>
+          <ellipse cx="82" cy="92" rx="4" ry="6" fill="#4ade80"/>
+          <ellipse cx="118" cy="92" rx="4" ry="6" fill="#4ade80"/>
+          <circle cx="82" cy="90" rx="2.5" fill="#fff"/>
+          <circle cx="118" cy="90" rx="2.5" fill="#fff"/>
+          <ellipse cx="100" cy="112" rx="6" ry="5" fill="#f9a8d4"/>
+          <path d="M88 122 Q100 132 112 122" stroke="#7c2d12" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <rect x="62" y="92" width="6" height="16" fill="#111827" rx="3"/>
+          <rect x="132" y="92" width="6" height="16" fill="#111827" rx="3"/>
+          <g transform="rotate(45 100 60)">
+            <rect x="78" y="45" width="44" height="30" fill="#b91c1c" rx="5"/>
+            <path d="M78 60 h44" stroke="#7f1d1d" stroke-width="3"/>
+          </g>
+          <text x="100" y="150" text-anchor="middle" font-size="16" font-weight="900" fill="#7c2d12" font-family="Segoe UI,Arial">ДЕМОНТАЖ!</text>
+        </svg>
+        <div class="name">Шотландские скотиш-страйты</div>
+        <div class="role">инженеры-подрывники · 12 голов</div>
+      </div>
+      <div class="member">
+        <!-- Бульдог -->
+        <svg viewBox="0 0 200 200" aria-label="Бульдог-грузчик">
+          <circle cx="100" cy="100" r="78" fill="#d1d5db"/>
+          <ellipse cx="100" cy="110" rx="62" ry="56" fill="#e5e7eb"/>
+          <ellipse cx="78" cy="85" rx="24" ry="20" fill="#c4b5a5"/>
+          <ellipse cx="122" cy="85" rx="24" ry="20" fill="#c4b5a5"/>
+          <ellipse cx="78" cy="88" rx="12" ry="10" fill="#fcd34d"/>
+          <ellipse cx="122" cy="88" rx="12" ry="10" fill="#fcd34d"/>
+          <circle cx="82" cy="86" r="5" fill="#111827"/>
+          <circle cx="118" cy="86" r="5" fill="#111827"/>
+          <circle cx="82" cy="85" r="1.6" fill="#fff"/>
+          <circle cx="118" cy="85" r="1.6" fill="#fff"/>
+          <ellipse cx="100" cy="100" rx="20" ry="26" fill="#e5e7eb"/>
+          <path d="M86 108 Q100 120 114 108 Z" fill="#4b5563"/>
+          <rect x="52" y="80" width="8" height="18" fill="#4b5563" rx="4"/>
+          <rect x="140" y="80" width="8" height="18" fill="#4b5563" rx="4"/>
+          <path d="M94 118 L100 112 L106 118" stroke="#111827" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <rect x="60" y="66" width="80" height="10" fill="#b45309" rx="5"/>
+          <text x="100" y="75" text-anchor="middle" font-size="8" font-weight="900" fill="#fff" font-family="Segoe UI,Arial">КАСКА-СМЕНА 1</text>
+          <rect x="100" y="152" width="14" height="26" fill="#9ca3af" rx="4"/>
+          <rect x="86" y="152" width="14" height="26" fill="#9ca3af" rx="4"/>
+          <text x="100" y="178" text-anchor="middle" font-size="14" font-weight="900" fill="#374151" font-family="Segoe UI,Arial">ломик всегда со мной</text>
+        </svg>
+        <div class="name">Бульдоги</div>
+        <div class="role">грузчики и «тягловая сила»</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="marquee">
+  <span>🐾 ДЕМОНТАЖ ЗАБОРОВ • ДЕМОНТАЖ СТОЛБОВ • ВЫВОЗ ДОСОК • РАЗБОР ВЕТХИХ ОГРАД • БЕСПЛАТНЫЙ ВЫЕЗД ПО СНТ «ЛАСТОЧКА» • ОПЛАТА РЫБОЙ • 🐾 ДЕМОНТАЖ ЗАБОРОВ • ДЕМОНТАЖ СТОЛБОВ • ВЫВОЗ ДОСОК • РАЗБОР ВЕТХИХ ОГРАД • БЕСПЛАТНЫЙ ВЫЕЗД ПО СНТ «ЛАСТОЧКА» • ОПЛАТА РЫБОЙ • </span>
+</div>
+
+<section id="why">
+  <div class="container">
+    <h2 class="section-title">Почему <span class="bark">коты и бульдоги</span>?</h2>
+    <p class="section-sub">Вы всё спрашивали: «а что, люди не могут?» Могут. Но это же скучно.</p>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="ico">🐈‍⬛</div>
+        <h3>Они и ломали — они и ломают</h3>
+        <p>Каждый шотландец знает, как разбирается забор: он лично сточил о него 1000 когтей. Теперь когти — в дело, а забор — в утиль.</p>
+      </div>
+      <div class="why-card">
+        <div class="ico">🦴</div>
+        <h3>Челюсти бульдога = гидромолот</h3>
+        <p>Бульдог держит столб, пока кот откручивает крепёж. Если крепёж не поддаётся — бульдог просто съедает забор. Пунктуально и без шума.</p>
+      </div>
+      <div class="why-card">
+        <div class="ico">🏐</div>
+        <h3>Шотландский когте-зацеп</h3>
+        <p>Скотиш-страйт запрыгивает на столб, подлазит под верхнюю балку и раскачивает её. Технология запатентована (патент № 3, зарегистрирован на бабушку).</p>
+      </div>
+      <div class="why-card">
+        <div class="ico">☎️</div>
+        <h3>Официальная база в СНТ «Ласточка»</h3>
+        <p>Бригада живёт прямо в СНТ, Волоколамского района. Приехали — сняли забор — ушли спать на солнышко. Никакой логистики, никаких опозданий.</p>
+      </div>
+      <div class="why-card">
+        <div class="ico">🧶</div>
+        <h3>Ни грамма пыли — только шерсть</h3>
+        <p>Демонтаж тихий и вежливый: кот мяукает «раз-два», бульдог пыхтит «взяли». Соседские собаки подтвердят.</p>
+      </div>
+      <div class="why-card">
+        <div class="ico">🐟</div>
+        <h3>Оплата рыбой и сосисками</h3>
+        <p>Цены честные: минтай — демонтаж, треска — демонтаж с вывозом, шашлык — демонтаж со срочным выездом ночью.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="crew" id="crew">
+  <div class="container">
+    <h2 class="section-title">Наша команда 🛠</h2>
+    <p class="section-sub">Фото с утренней планерки. Да, они всегда такие серьёзные. Да, это их любимые позы.</p>
+    <div class="crew-grid">
+
+      <div class="crew-card">
+        <img src="img/crew-sonya.jpg" alt="Кот Соня за работой" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <svg viewBox="0 0 200 200" aria-label="Кот Соня" style="display:none">
+          <circle cx="100" cy="95" r="70" fill="#fcd34d"/>
+          <ellipse cx="70" cy="65" rx="26" ry="26" fill="#f59e0b"/>
+          <ellipse cx="130" cy="65" rx="26" ry="26" fill="#f59e0b"/>
+          <ellipse cx="70" cy="65" rx="16" ry="16" fill="#fbbf24"/>
+          <ellipse cx="130" cy="65" rx="16" ry="16" fill="#fbbf24"/>
+          <ellipse cx="82" cy="90" rx="7" ry="11" fill="#111827"/>
+          <ellipse cx="118" cy="90" rx="7" ry="11" fill="#111827"/>
+          <ellipse cx="82" cy="90" rx="3.5" ry="5.5" fill="#4ade80"/>
+          <ellipse cx="118" cy="90" rx="3.5" ry="5.5" fill="#4ade80"/>
+          <circle cx="100" cy="108" rx="6" ry="5" fill="#f9a8d4"/>
+          <path d="M100 96 q4 4 0 6 q-4 -2 0 -6" fill="#b45309"/>
+          <path d="M86 120 Q100 130 114 120" stroke="#7c2d12" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <rect x="64" y="92" width="5" height="14" fill="#111827" rx="2.5"/>
+          <rect x="131" y="92" width="5" height="14" fill="#111827" rx="2.5"/>
+          <rect x="50" y="150" width="100" height="12" fill="#b91c1c" rx="6"/>
+          <text x="100" y="160" text-anchor="middle" font-size="9" font-weight="900" fill="#fff" font-family="Segoe UI,Arial">МАСТЕР «СОНЯ»</text>
+        </svg>
+        <div class="role-tag">Шотландский скотиш-страйт</div>
+        <h3>Соня</h3>
+        <div class="spec">Мастер по разбору столбов</div>
+        <p>Официально спит на смене, неофициально — рекордсмен по выковыриванию бетонных столбов. Умеет спать так, что у забора сносит крышу.</p>
+        <div class="badge">Стаж: 3000 дневных дремот</div>
+      </div>
+
+      <div class="crew-card">
+        <img src="img/crew-pelmen.jpg" alt="Кот Пельмень за работой" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <svg viewBox="0 0 200 200" aria-label="Кот Пельмень" style="display:none">
+          <circle cx="100" cy="95" r="70" fill="#e5e7eb"/>
+          <ellipse cx="72" cy="66" rx="26" ry="26" fill="#d1d5db"/>
+          <ellipse cx="128" cy="66" rx="26" ry="26" fill="#d1d5db"/>
+          <ellipse cx="82" cy="90" rx="7" ry="11" fill="#111827"/>
+          <ellipse cx="118" cy="90" rx="7" ry="11" fill="#111827"/>
+          <ellipse cx="82" cy="90" rx="3.5" ry="5.5" fill="#facc15"/>
+          <ellipse cx="118" cy="90" rx="3.5" ry="5.5" fill="#facc15"/>
+          <circle cx="100" cy="108" rx="6" ry="5" fill="#f9a8d4"/>
+          <path d="M88 122 Q100 132 112 122" stroke="#374151" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <rect x="66" y="92" width="5" height="14" fill="#111827" rx="2.5"/>
+          <rect x="129" y="92" width="5" height="14" fill="#111827" rx="2.5"/>
+          <rect x="46" y="150" width="108" height="12" fill="#7c2d12" rx="6"/>
+          <text x="100" y="160" text-anchor="middle" font-size="9" font-weight="900" fill="#fff" font-family="Segoe UI,Arial">ЛЕБЁДКА «ПЕЛЬМЕНЬ»</text>
+        </svg>
+        <div class="role-tag">Шотландский скотиш-страйт</div>
+        <h3>Пельмень</h3>
+        <div class="spec">Тяга-лебёдка и добытчик мышей</div>
+        <p>Пока все ломают, Пельмень сидит под забором и сторожит, чтобы ни один гвоздь не сбежал. Мыши-конкуренты из соседнего СНТ в ужасе.</p>
+        <div class="badge">Сила: 1 лебёдка на лапке</div>
+      </div>
+
+      <div class="crew-card">
+        <img src="img/crew-barsik.jpg" alt="Кот Барсик-Контроль за работой" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <svg viewBox="0 0 200 200" aria-label="Кот Барсик-Контроль" style="display:none">
+          <circle cx="100" cy="95" r="70" fill="#fbbf24"/>
+          <ellipse cx="72" cy="66" rx="26" ry="26" fill="#f59e0b"/>
+          <ellipse cx="128" cy="66" rx="26" ry="26" fill="#f59e0b"/>
+          <circle cx="100" cy="82" r="42" fill="#fcd34d"/>
+          <ellipse cx="84" cy="88" rx="7" ry="11" fill="#111827"/>
+          <ellipse cx="116" cy="88" rx="7" ry="11" fill="#111827"/>
+          <ellipse cx="84" cy="88" rx="3.5" ry="5.5" fill="#4ade80"/>
+          <ellipse cx="116" cy="88" rx="3.5" ry="5.5" fill="#4ade80"/>
+          <circle cx="100" cy="106" rx="6" ry="5" fill="#f9a8d4"/>
+          <path d="M88 120 Q100 128 112 120" stroke="#7c2d12" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <rect x="68" y="90" width="5" height="14" fill="#111827" rx="2.5"/>
+          <rect x="127" y="90" width="5" height="14" fill="#111827" rx="2.5"/>
+          <circle cx="100" cy="62" r="16" fill="#b45309"/>
+          <text x="100" y="67" text-anchor="middle" font-size="12" font-weight="900" fill="#fff" font-family="Segoe UI,Arial">ОТК</text>
+          <rect x="42" y="150" width="116" height="12" fill="#1d4ed8" rx="6"/>
+          <text x="100" y="160" text-anchor="middle" font-size="8.5" font-weight="900" fill="#fff" font-family="Segoe UI,Arial">КОНТРОЛЁР КАЧЕСТВА</text>
+        </svg>
+        <div class="role-tag">Шотландский скотиш-страйт</div>
+        <h3>Барсик-Контроль</h3>
+        <div class="spec">Контролёр качества ОТК</div>
+        <p>После демонтажа обходит участок и проверяет, не осталось ли ни одного столба. Если остался — садится на него. Усаживается так, что вынуть невозможно.</p>
+        <div class="badge">Проверил: 99% участков СНТ</div>
+      </div>
+
+      <div class="crew-card">
+        <img src="img/crew-volt.jpg" alt="Бульдог Вольт за работой" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <svg viewBox="0 0 200 200" aria-label="Бульдог Вольт" style="display:none">
+          <circle cx="100" cy="95" r="70" fill="#d1d5db"/>
+          <ellipse cx="100" cy="108" rx="58" ry="52" fill="#e5e7eb"/>
+          <ellipse cx="76" cy="80" rx="22" ry="18" fill="#c4b5a5"/>
+          <ellipse cx="124" cy="80" rx="22" ry="18" fill="#c4b5a5"/>
+          <ellipse cx="80" cy="82" rx="11" ry="9" fill="#fcd34d"/>
+          <ellipse cx="120" cy="82" rx="11" ry="9" fill="#fcd34d"/>
+          <circle cx="84" cy="80" r="5" fill="#111827"/>
+          <circle cx="116" cy="80" r="5" fill="#111827"/>
+          <ellipse cx="100" cy="96" rx="18" ry="24" fill="#e5e7eb"/>
+          <path d="M87 104 Q100 116 113 104 Z" fill="#4b5563"/>
+          <rect x="54" y="76" width="8" height="18" fill="#4b5563" rx="4"/>
+          <rect x="138" y="76" width="8" height="18" fill="#4b5563" rx="4"/>
+          <path d="M94 114 L100 108 L106 114" stroke="#111827" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <rect x="58" y="62" width="84" height="10" fill="#b45309" rx="5"/>
+          <rect x="100" y="146" width="14" height="26" fill="#9ca3af" rx="4"/>
+          <rect x="86" y="146" width="14" height="26" fill="#9ca3af" rx="4"/>
+          <text x="100" y="140" text-anchor="middle" font-size="8.5" font-weight="900" fill="#374151" font-family="Segoe UI,Arial">ГРУЗЧИК «ВОЛЬТ»</text>
+        </svg>
+        <div class="role-tag">Английский бульдог</div>
+        <h3>Вольт</h3>
+        <div class="spec">Столбовыдёргиватель №1</div>
+        <p>Подходит к столбу, трётся щекой и столб понимает: «надо сходить». Дальше — дело техники. За один обход вытаскивает 7 столбов и 1 забор.</p>
+        <div class="badge">Челюсти: сертифицированный ГЭС</div>
+      </div>
+
+      <div class="crew-card">
+        <img src="img/crew-ambal.jpg" alt="Бульдог Амбал за работой" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <svg viewBox="0 0 200 200" aria-label="Бульдог Амбал" style="display:none">
+          <circle cx="100" cy="95" r="70" fill="#e5e7eb"/>
+          <ellipse cx="100" cy="108" rx="58" ry="52" fill="#f3f4f6"/>
+          <ellipse cx="76" cy="80" rx="22" ry="18" fill="#c4b5a5"/>
+          <ellipse cx="124" cy="80" rx="22" ry="18" fill="#c4b5a5"/>
+          <ellipse cx="80" cy="82" rx="11" ry="9" fill="#fcd34d"/>
+          <ellipse cx="120" cy="82" rx="11" ry="9" fill="#fcd34d"/>
+          <circle cx="84" cy="80" r="5" fill="#111827"/>
+          <circle cx="116" cy="80" r="5" fill="#111827"/>
+          <ellipse cx="100" cy="96" rx="18" ry="24" fill="#f3f4f6"/>
+          <path d="M87 104 Q100 116 113 104 Z" fill="#4b5563"/>
+          <rect x="54" y="76" width="8" height="18" fill="#4b5563" rx="4"/>
+          <rect x="138" y="76" width="8" height="18" fill="#4b5563" rx="4"/>
+          <path d="M92 114 Q100 120 108 114" stroke="#111827" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <rect x="100" y="146" width="14" height="26" fill="#9ca3af" rx="4"/>
+          <rect x="86" y="146" width="14" height="26" fill="#9ca3af" rx="4"/>
+          <text x="100" y="140" text-anchor="middle" font-size="8.5" font-weight="900" fill="#374151" font-family="Segoe UI,Arial">ВЫВОЗ «АМБАЛ»</text>
+        </svg>
+        <div class="role-tag">Французский бульдог</div>
+        <h3>Амбал</h3>
+        <div class="spec">Вывоз и вынос всего лишнего</div>
+        <p>Собирает демонтированные доски в одну аккуратную кучу (своё лежбище) и утаскивает к базе. Доски, правда, потом сложно отобрать обратно.</p>
+        <div class="badge">Вместимость: 1 участок на морду</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="story" id="story">
+  <div class="container">
+    <div class="story-wrap">
+      <!-- Кот-бригадир -->
+      <img src="img/brigadir.jpg" alt="Кот-бригадир Арчибальд на объекте" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+      <svg viewBox="0 0 420 420" aria-label="Кот-бригадир" style="display:none">
+        <rect x="20" y="20" width="380" height="380" rx="40" fill="#f59e0b"/>
+        <circle cx="210" cy="200" r="120" fill="#fbbf24"/>
+        <ellipse cx="140" cy="150" rx="50" ry="50" fill="#f59e0b"/>
+        <ellipse cx="280" cy="150" rx="50" ry="50" fill="#f59e0b"/>
+        <ellipse cx="140" cy="150" rx="32" ry="32" fill="#fcd34d"/>
+        <ellipse cx="280" cy="150" rx="32" ry="32" fill="#fcd34d"/>
+        <ellipse cx="140" cy="150" rx="18" ry="18" fill="#b45309"/>
+        <ellipse cx="280" cy="150" rx="18" ry="18" fill="#b45309"/>
+        <circle cx="175" cy="195" r="14" fill="#111827"/>
+        <circle cx="245" cy="195" r="14" fill="#111827"/>
+        <ellipse cx="175" cy="195" rx="7" ry="10" fill="#4ade80"/>
+        <ellipse cx="245" cy="195" rx="7" ry="10" fill="#4ade80"/>
+        <circle cx="175" cy="191" r="4" fill="#fff"/>
+        <circle cx="245" cy="191" r="4" fill="#fff"/>
+        <circle cx="210" cy="230" rx="11" ry="9" fill="#f9a8d4"/>
+        <path d="M186 255 Q210 272 234 255" stroke="#7c2d12" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <rect x="160" y="255" width="14" height="22" fill="#111827" rx="7"/>
+        <rect x="246" y="255" width="14" height="22" fill="#111827" rx="7"/>
+        <rect x="120" y="150" width="180" height="14" fill="#b91c1c" rx="7"/>
+        <text x="210" y="161" text-anchor="middle" font-size="10" font-weight="900" fill="#fff" font-family="Segoe UI,Arial">БРИГАДИР «АРЧИБАЛЬД» · СМЕНА № 17</text>
+        <rect x="180" y="310" width="60" height="34" fill="#7c2d12" rx="8"/>
+        <path d="M180 318 L160 344 L200 344 Z" fill="#57534e"/>
+        <path d="M240 318 L260 344 L220 344 Z" fill="#57534e"/>
+        <rect x="196" y="344" width="28" height="10" fill="#111827" rx="4"/>
+        <circle cx="162" cy="348" r="7" fill="#f87171"/>
+        <text x="150" y="372" font-size="13" font-weight="900" fill="#fde68a" font-family="Segoe UI,Arial">⭐ ГЕРОЙ ЗАБОРА</text>
+        <text x="160" y="392" font-size="11" font-weight="700" fill="#fff" font-family="Segoe UI,Arial">стаж: с рождения</text>
+      </svg>
+      <div class="story-text">
+        <h2>Весёлая история про бригадира — кота <span class="bark">«Арчибальда»</span></h2>
+        <p>
+          Бригадир — шотландский скотиш-страйт по имени <b>Арчибальд</b>. В бригаде его ещё называют
+          «товарищ Арчибальд» или, в особенно уважительные моменты, — «Арчибальд, ну вы как всегда правы».
+        </p>
+        <p>
+          Арчибальд стал бригадиром случайно. Когда-то он просто жил в СНТ «Ласточка» Волоколамского района
+          и следил, чтобы на участках ничего не валялось. Однажды у соседа просел забор — и Арчибальд
+          лично, без страховки и СИЗ, забрался на столб и мяукнул так, что тот упал от испуга.
+          С тех пор его не могли не назначить.
+        </p>
+        <p>
+          На каждой планерке Арчибальд проходит по кругу, садится точно на чертёж (такая примета:
+          чертёж съедается — план исполняется) и «утверждает» объект. Его коронная команда —
+          <b>«Мяу-ломаем!»</b>, после которой бульдоги Вольт и Амбал начинают пыхтеть,
+          а шотландцы Соня и Пельмень начинают демонтировать всё, что не приколочено.
+        </p>
+        <div class="quote">
+          «Правильная бригада отличается тем, что у неё бригадир, который понимает в заборах
+          больше, чем в самих заборах». — Арчибальд, 4 года, заслуженный демонтажник
+        </div>
+        <p>
+          После смены Арчибальд собирает всех на базе, пересчитывает (по хвостам), выдаёт норму рыбы
+          и уходит спать в коробку с надписью «ИНСТРУМЕНТ». Коробка — подъёмный кран для его личных нужд.
+        </p>
+        <ul class="facts">
+          <li>За смену Арчибальд проходит 7 км, а кажется — что сидел на заборе всё время</li>
+          <li>Личный рекорд: уговорил бульдога «сам упасть» без единого касания</li>
+          <li>Единственный в СНТ, кто умеет считать столбы и не засыпать на цифре «три»</li>
+          <li>Собственный табурет-лестница, но пользуется только лестницей соседа</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="price">
+  <div class="container">
+    <h2 class="section-title">Прайс на демонтаж 💰</h2>
+    <p class="section-sub">Оплата рыбой, сосисками и, в особых случаях, честным рукопожатием.</p>
+    <div class="price-grid">
+      <div class="price-card hit">
+        <div class="serv">Демонтаж забора</div>
+        <div class="price">2 минтая</div>
+        <div class="unit">за 1 пролёт (2 м)</div>
+        <p class="cat-feature">🐟 Скидка «один кот спит на объекте»</p>
+        <p class="note">Шотландцы разбирают, бульдоги уносят. Доски — на дрова.</p>
+      </div>
+      <div class="price-card">
+        <div class="serv">Демонтаж столба (деревянный)</div>
+        <div class="price">1 минтай + сосиска</div>
+        <div class="unit">за столб</div>
+        <p class="cat-feature">🐾 Вольт раскачивает, Арчибальд командует</p>
+        <p class="note">Если столб «плохой» — Пельмень лежит рядом и смотрит, процесс идёт быстрее.</p>
+      </div>
+      <div class="price-card">
+        <div class="serv">Демонтаж бетонного столба</div>
+        <div class="price">2 минтая + сосиска</div>
+        <div class="unit">за столб</div>
+        <p class="cat-feature">🦴 Требуется ночная смена «без мышей»</p>
+        <p class="note">Тяжёлый случай. Выезжает весь состав, включая резервного кота Барсика-Контроля.</p>
+      </div>
+      <div class="price-card">
+        <div class="serv">Полный демонтаж участка</div>
+        <div class="price">5 минтаев</div>
+        <div class="unit">или договоримся на шашлык</div>
+        <p class="cat-feature">⭐ «Весь забор» — пакет «Бригадир доволен»</p>
+        <p class="note">Заборы, столбы, калитки, штакетник. Всё, что уважаемый Арчибальд одобрит.</p>
+      </div>
+    </div>
+    <p class="price-note">* Бульдоги работают «до упора». Коты работают «по настроению», но настроение у них всегда рабочее — особенно после кормёжки.</p>
+  </div>
+</section>
+
+<section class="gallery" id="work">
+  <div class="container">
+    <h2 class="section-title">Наши работы 📸</h2>
+    <p class="section-sub">Фотоотчёты с реальных объектов. Настоящие коты, настоящие бульдоги, настоящие заборы.</p>
+    <div class="gallery-grid">
+
+      <figure class="photo">
+        <img src="img/work-1.jpg" alt="Кот ломает забор" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <svg viewBox="0 0 400 260" aria-label="Кот-страйт ломает забор" style="display:none">
+          <rect width="400" height="260" fill="#1e3a5f"/>
+          <rect x="0" y="180" width="400" height="80" fill="#365314"/>
+          <rect x="60" y="60" width="18" height="120" fill="#b45309"/>
+          <rect x="120" y="60" width="18" height="120" fill="#b45309"/>
+          <rect x="180" y="60" width="18" height="120" fill="#b45309"/>
+          <rect x="60" y="60" width="140" height="14" fill="#92400e"/>
+          <rect x="60" y="110" width="140" height="14" fill="#92400e"/>
+          <g transform="rotate(18 220 120)">
+            <rect x="200" y="100" width="18" height="120" fill="#78350f"/>
+            <rect x="200" y="100" width="140" height="14" fill="#78350f"/>
+          </g>
+          <circle cx="150" cy="150" r="34" fill="#fbbf24"/>
+          <ellipse cx="134" cy="136" rx="12" ry="12" fill="#f59e0b"/>
+          <ellipse cx="166" cy="136" rx="12" ry="12" fill="#f59e0b"/>
+          <ellipse cx="142" cy="150" rx="4" ry="6" fill="#111827"/>
+          <ellipse cx="158" cy="150" rx="4" ry="6" fill="#111827"/>
+          <path d="M142 158 Q150 164 158 158" stroke="#7c2d12" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <rect x="120" y="180" width="60" height="14" fill="#b91c1c" rx="4"/>
+          <text x="90" y="40" font-size="22" font-weight="900" fill="#fcd34d" font-family="Segoe UI,Arial">«Соня, ты опять?!»</text>
+        </svg>
+        <figcaption><b>«Соня, ты опять?!»</b> — кот-страйт Соня в процессе демонтажа. Доска сдалась первой.</figcaption>
+      </figure>
+
+      <figure class="photo">
+        <img src="img/work-2.jpg" alt="Бульдог выдёргивает столб" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <svg viewBox="0 0 400 260" aria-label="Бульдог выдёргивает столб" style="display:none">
+          <rect width="400" height="260" fill="#3f3f46"/>
+          <rect x="0" y="200" width="400" height="60" fill="#27272a"/>
+          <rect x="150" y="120" width="24" height="90" fill="#7c2d12"/>
+          <rect x="146" y="112" width="32" height="14" fill="#57534e"/>
+          <ellipse cx="250" cy="190" rx="70" ry="55" fill="#d1d5db"/>
+          <ellipse cx="240" cy="170" rx="26" ry="20" fill="#c4b5a5"/>
+          <ellipse cx="268" cy="170" rx="26" ry="20" fill="#c4b5a5"/>
+          <ellipse cx="242" cy="172" rx="12" ry="9" fill="#fcd34d"/>
+          <circle cx="245" cy="170" r="5" fill="#111827"/>
+          <circle cx="263" cy="170" r="5" fill="#111827"/>
+          <ellipse cx="252" cy="188" rx="16" ry="20" fill="#d1d5db"/>
+          <path d="M244 198 Q252 208 260 198 Z" fill="#4b5563"/>
+          <rect x="252" y="228" width="12" height="24" fill="#9ca3af" rx="4"/>
+          <rect x="238" y="228" width="12" height="24" fill="#9ca3af" rx="4"/>
+          <path d="M252 206 L258 200 L264 206" stroke="#111827" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <text x="120" y="40" font-size="20" font-weight="900" fill="#fcd34d" font-family="Segoe UI,Arial">Вольт: «я только нюхнул»</text>
+        </svg>
+        <figcaption><b>Вольт: «я только нюхнул»</b> — бульдог-грузчик вытащил столб одним рывком. Забор сам побежал следом.</figcaption>
+      </figure>
+
+      <figure class="photo">
+        <img src="img/work-3.jpg" alt="Планёрка бригады" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <svg viewBox="0 0 400 260" aria-label="Кот-бригадир на совещании" style="display:none">
+          <rect width="400" height="260" fill="#78350f"/>
+          <rect x="0" y="210" width="400" height="50" fill="#451a03"/>
+          <rect x="40" y="30" width="200" height="12" fill="#b45309" rx="6"/>
+          <ellipse cx="60" cy="190" rx="24" ry="16" fill="#f59e0b"/>
+          <circle cx="60" cy="170" r="12" fill="#fbbf24"/>
+          <circle cx="60" cy="190" rx="0" r="0" fill="#fbbf24"/>
+          <ellipse cx="120" cy="196" rx="26" ry="16" fill="#d1d5db"/>
+          <ellipse cx="160" cy="196" rx="26" ry="16" fill="#d1d5db"/>
+          <ellipse cx="230" cy="196" rx="24" ry="16" fill="#f59e0b"/>
+          <circle cx="120" cy="186" r="11" fill="#e5e7eb"/>
+          <circle cx="120" cy="186" r="3" fill="#111827"/>
+          <circle cx="160" cy="186" r="11" fill="#e5e7eb"/>
+          <circle cx="160" cy="186" r="3" fill="#111827"/>
+          <circle cx="230" cy="186" r="11" fill="#fbbf24"/>
+          <circle cx="230" cy="186" r="3" fill="#111827"/>
+          <rect x="300" y="140" width="70" height="50" fill="#e5e7eb" rx="6"/>
+          <path d="M310 150 L330 165 L345 155 L360 170" stroke="#b45309" stroke-width="3" fill="none"/>
+          <text x="120" y="28" font-size="17" font-weight="900" fill="#fcd34d" font-family="Segoe UI,Arial">Планёрка. Чертежи съедены.</text>
+        </svg>
+        <figcaption><b>Планёрка</b> — утреннее совещание на базе. Чертежи съедены Арчибальдом, план принят единогласно.</figcaption>
+      </figure>
+
+      <figure class="photo">
+        <img src="img/work-4.jpg" alt="Кот на столбе" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <svg viewBox="0 0 400 260" aria-label="Кот контролёр сидит на столбе" style="display:none">
+          <rect width="400" height="260" fill="#14532d"/>
+          <rect x="0" y="200" width="400" height="60" fill="#052e16"/>
+          <rect x="180" y="40" width="40" height="160" fill="#7c2d12"/>
+          <rect x="170" y="34" width="60" height="12" fill="#57534e"/>
+          <circle cx="200" cy="30" r="26" fill="#fbbf24"/>
+          <ellipse cx="188" cy="20" rx="10" ry="10" fill="#f59e0b"/>
+          <ellipse cx="212" cy="20" rx="10" ry="10" fill="#f59e0b"/>
+          <ellipse cx="192" cy="28" rx="4" ry="6" fill="#111827"/>
+          <ellipse cx="208" cy="28" rx="4" ry="6" fill="#111827"/>
+          <path d="M192 36 Q200 42 208 36" stroke="#7c2d12" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <circle cx="200" cy="100" r="5" fill="#dc2626"/>
+          <text x="200" y="175" text-anchor="middle" font-size="15" font-weight="900" fill="#fde68a" font-family="Segoe UI,Arial">«Проверено. Можно.»</text>
+        </svg>
+        <figcaption><b>Барсик-Контроль</b> — после демонтажа сел на единственный оставшийся столб. Теперь это официально «столб-лежанка».</figcaption>
+      </figure>
+
+      <figure class="photo">
+        <img src="img/work-5.jpg" alt="Бульдог с досками" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <svg viewBox="0 0 400 260" aria-label="Бульдоги увозят доски" style="display:none">
+          <rect width="400" height="260" fill="#44403c"/>
+          <rect x="0" y="200" width="400" height="60" fill="#292524"/>
+          <rect x="60" y="120" width="120" height="12" fill="#b45309"/>
+          <rect x="60" y="140" width="120" height="12" fill="#b45309"/>
+          <rect x="60" y="160" width="120" height="12" fill="#b45309"/>
+          <ellipse cx="250" cy="185" rx="62" ry="48" fill="#e5e7eb"/>
+          <ellipse cx="230" cy="165" rx="22" ry="17" fill="#c4b5a5"/>
+          <circle cx="238" cy="163" r="4" fill="#111827"/>
+          <ellipse cx="250" cy="182" rx="14" ry="18" fill="#e5e7eb"/>
+          <path d="M243 192 Q250 200 257 192 Z" fill="#4b5563"/>
+          <rect x="252" y="218" width="11" height="22" fill="#9ca3af" rx="4"/>
+          <rect x="239" y="218" width="11" height="22" fill="#9ca3af" rx="4"/>
+          <text x="140" y="40" font-size="20" font-weight="900" fill="#fcd34d" font-family="Segoe UI,Arial">Амбал: «это моё лежбище»</text>
+        </svg>
+        <figcaption><b>Амбал: «это моё лежбище»</b> — разобранные доски аккуратно сложены в кучу для вывоза. Кучей пока спит Амбал.</figcaption>
+      </figure>
+
+      <figure class="photo">
+        <img src="img/work-6.jpg" alt="Выдача рыбы бригаде" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <svg viewBox="0 0 400 260" aria-label="Бригадир выдаёт рыбу" style="display:none">
+          <rect width="400" height="260" fill="#0c4a6e"/>
+          <rect x="0" y="210" width="400" height="50" fill="#082f49"/>
+          <rect x="40" y="40" width="120" height="80" fill="#e5e7eb" rx="8"/>
+          <text x="100" y="90" text-anchor="middle" font-size="13" font-weight="900" fill="#0c4a6e" font-family="Segoe UI,Arial">БАЗА</text>
+          <text x="100" y="110" text-anchor="middle" font-size="10" font-weight="700" fill="#0c4a6e" font-family="Segoe UI,Arial">СНТ «ЛАСТОЧКА»</text>
+          <path d="M200 100 q30 -25 60 0 q-30 25 -60 0" fill="#9ca3af"/>
+          <ellipse cx="230" cy="100" rx="16" ry="8" fill="#6b7280"/>
+          <circle cx="230" cy="92" r="6" fill="#111827"/>
+          <path d="M230 92 l2 5 l-2 2 l-2 -2 z" fill="#111827"/>
+          <circle cx="180" cy="180" r="14" fill="#fbbf24"/>
+          <circle cx="300" cy="180" r="14" fill="#e5e7eb"/>
+          <circle cx="340" cy="186" r="14" fill="#fbbf24"/>
+          <text x="200" y="40" font-size="19" font-weight="900" fill="#7dd3fc" font-family="Segoe UI,Arial">Выдача рыбы. Очередь.</text>
+        </svg>
+        <figcaption><b>Выдача рыбы</b> — конец рабочего дня на базе в СНТ «Ласточка». Очередь за минтаем строгая, коты не толкаются (почти).</figcaption>
+      </figure>
+
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="container">
+    <h2 class="section-title">Где нас найти 📍</h2>
+    <p class="section-sub">База бригады — СНТ «Ласточка», Волоколамский район, Московская область.</p>
+    <div class="contact-wrap">
+      <div class="contact-card">
+        <h3>Контактная информация</h3>
+        <div class="contact-row">
+          <div class="ic">📍</div>
+          <div><b>Адрес базы</b><span>СНТ «Ласточка», Волоколамский район, Московская обл.</span></div>
+        </div>
+        <div class="contact-row">
+          <div class="ic">🐱</div>
+          <div><b>Бригадир</b><span>Кот Арчибальд, шотландский скотиш-страйт (приём звонков по мявку)</span></div>
+        </div>
+        <div class="contact-row">
+          <div class="ic">📞</div>
+          <div><b>Телефон</b><span>8 (800) МЯУ-МЯУ (с 9:00 до сонного часа)</span></div>
+        </div>
+        <div class="contact-row">
+          <div class="ic">🦴</div>
+          <div><b>Выезд</b><span>По всему Волоколамскому району и СНТ. Бульдоги — на своих четырёх.</span></div>
+        </div>
+        <div class="contact-row">
+          <div class="ic">🐟</div>
+          <div><b>Оплата</b><span>Рыбой, сосисками, шашлыком. Наличные не берём — запах не тот.</span></div>
+        </div>
+      </div>
+      <div class="map">
+        <div class="pin">🐾📍🐾</div>
+        <h3>СНТ «Ласточка»</h3>
+        <p>Волоколамский район, Московская область</p>
+        <p>В навигаторе введите: «СНТ Ласточка, Волоколамский район»</p>
+        <a class="map-btn" href="https://yandex.ru/maps/?text=СНТ%20Ласточка%2C%20Волоколамский%20район%2C%20Московская%20область" target="_blank" rel="noopener">🚗 Построить маршрут</a>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <h3>Вызвать бригаду на демонтаж 🛠</h3>
+      <form id="orderForm">
+        <div class="form-grid">
+          <div>
+            <label for="name">Ваше имя</label>
+            <input id="name" type="text" placeholder="Иван Петрович" required>
+          </div>
+          <div>
+            <label for="phone">Телефон</label>
+            <input id="phone" type="tel" placeholder="+7 (___) ___-__-__" required>
+          </div>
+          <div>
+            <label for="type">Что демонтировать?</label>
+            <select id="type">
+              <option>Забор (пролёт)</option>
+              <option>Деревянный столб</option>
+              <option>Бетонный столб</option>
+              <option>Полный демонтаж участка</option>
+              <option>Не знаю, пусть бригадир посмотрит</option>
+            </select>
+          </div>
+          <div>
+            <label for="pay">Оплата</label>
+            <select id="pay">
+              <option>Минтаем</option>
+              <option>Сосисками</option>
+              <option>Шашлыком (срочный выезд)</option>
+              <option>Договоримся на месте</option>
+            </select>
+          </div>
+          <div class="full">
+            <label for="msg">Комментарий (по желанию)</label>
+            <textarea id="msg" rows="3" placeholder="Например: забор ободран котами, нужно срочно. Или: соседский кот уже начал без нас..."></textarea>
+          </div>
+          <button class="submit" type="submit">🐟 Отправить заявку</button>
+          <div class="form-note">После отправки бригадир Арчибальд лично посмотрит заявку и мяукнет в ответ.</div>
+        </div>
+      </form>
+      <div class="ok-msg" id="okMsg">Заявка принята! Бригадир Арчибальд уже мурчит над вашей проблемой. Ожидайте выезда кота и бульдога.</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>© 2026 Бригада <b>«Мурр»</b> — демонтаж заборов и столбов силами шотландских скотиш-страйтов и бульдогов.</p>
+    <p>База: СНТ «Ласточка», Волоколамский район. Работаем без выходных, но с большими перерывами на сон.</p>
+    <p>Ни один забор не пострадал без любви. Почти.</p>
+    <p style="margin-top:10px;font-size:.75rem;">Фото из Wikimedia Commons (CC BY-SA 2.0/3.0): Scottish Fold Cat, Scottish fold-straight 03, Straight-eared Scottish Fold, English Bulldog Ouside, French Bulldog ru, Scottish Straight cat with costume, Scottish Straight Cat, Bulldog 2 Helsinki, Scottish fold-straight 05, Scottish fold-straight 11, English Bulldog red &amp; white, Brindle french bulldog.</p>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('orderForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    document.getElementById('okMsg').style.display='block';
+    this.reset();
+    setTimeout(function(){
+      document.getElementById('okMsg').style.display='none';
+    },6000);
+  });
+</script>
+
+</body>
+</html>
